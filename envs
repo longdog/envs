@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+# envs - .env files manager
+# https://github.com/longdog/envs
+
+set -euo pipefail
+
+echo "envs - .env files manager"
+
+if ! origin=$(git remote get-url origin 2>/dev/null); then
+    echo "Error: Not a git repository or no remote 'origin'" >&2
+    exit 1
+fi
+
+: "${HOME:?Error: HOME directory not set}"
+config="${HOME}/.config/envs"
+
+project=$(git rev-parse --show-toplevel)
+current=$(realpath --relative-to="$project" .)
+env="$config/$origin/$current/.env"
+echo "Managing .env for project: ${origin}/${current}"
+mkdir -p "$(dirname "$env")"
+
+# If central .env doesn't exist but local does, preserve it
+    if [[ ! -f "$env" && -f ".env" ]]; then
+        echo "Preserving existing .env file"
+        mv ".env" "$env"
+    fi
+
+touch "$env"
+ln -sf "$env" .env
+
+echo "Symlink created: .env -> ${env}"
