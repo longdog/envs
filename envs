@@ -7,10 +7,23 @@ set -euo pipefail
 
 echo "envs - .env files manager"
 
-if ! origin=$(git remote get-url origin 2>/dev/null); then
+
+sanitize_url() {
+    local url="$1"
+    # Replace protocol prefixes
+    url="${url#https://}"
+    url="${url#http://}"
+    url="${url#ssh://}"
+    url="${url#git://}"
+    # Replace all remaining special chars
+    echo "$url" | sed -E 's/[^a-zA-Z0-9._-]+/-/g'
+}
+
+if ! git=$(git remote get-url origin 2>/dev/null); then
     echo "Error: Not a git repository or no remote 'origin'" >&2
     exit 1
 fi
+origin=$(sanitize_url "$git")
 
 : "${HOME:?Error: HOME directory not set}"
 config="${HOME}/.config/envs"
