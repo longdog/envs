@@ -40,7 +40,7 @@ teardown() {
   echo "FOO=bar" > .env
   run "$SCRIPT"
   assert_success
-  assert_output --partial "Preserving existing .env file"
+  assert_output --partial "Preserving existing"
 
   central_env="$HOME/.config/envs/github.com-example-project.git/back/.env"
   [ -f "$central_env" ]
@@ -48,6 +48,21 @@ teardown() {
   [ -L .env ]
   [ "$(readlink .env)" = "$central_env" ]
 }
+
+
+@test "use existing .env.examle as template" {
+  echo "FOO=bar" > .env.example
+  run "$SCRIPT"
+  assert_success
+  assert_output --partial "env.example template"
+
+  central_env="$HOME/.config/envs/github.com-example-project.git/back/.env"
+  [ -f "$central_env" ]
+  [ "$(cat "$central_env")" = "FOO=bar" ]
+  [ -L .env ]
+  [ "$(readlink .env)" = "$central_env" ]
+}
+
 
 @test "does nothing if not inside a git repo" {
   cd "$TMPDIR"

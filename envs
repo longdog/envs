@@ -35,12 +35,25 @@ echo "Managing .env for project: ${origin}/${current}"
 mkdir -p "$(dirname "$env")"
 
 # If central .env doesn't exist but local does, preserve it
-    if [[ ! -f "$env" && -f ".env" ]]; then
-        echo "Preserving existing .env file"
+if [[ ! -f "$env" ]]; then
+    # Case 1: Local .env exists - preserve it
+    if [[ -f ".env" ]]; then
+        echo "Preserving existing local .env file"
         mv ".env" "$env"
+    
+    # Case 2: .env.example exists - use as template
+    elif [[ -f ".env.example" ]]; then
+        echo "Creating new .env from .env.example template"
+        cp ".env.example" "$env"
+    
+    # Case 3: No existing files - create empty
+    else
+        echo "Creating new empty .env file"
+        touch "$env"
     fi
+fi
 
-touch "$env"
+#
 ln -sf "$env" .env
 
 echo "Symlink created: .env -> ${env}"
