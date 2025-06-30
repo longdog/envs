@@ -10,6 +10,10 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+      - name: lint
+        run: |
+          shellcheck envs
+          shellcheck install.sh
       - name: Set up Bats
         run: |
           git clone --depth 1 https://github.com/bats-core/bats-core.git
