@@ -1,0 +1,24 @@
+name: test
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Bats
+        run: |
+          git clone --depth 1 https://github.com/bats-core/bats-core.git
+          sudo ./bats-core/install.sh /usr/local
+      - name: Install bats-assert and bats-support
+        run: |
+          mkdir -p tests/libs
+          git clone https://github.com/bats-core/bats-assert tests/libs/bats-assert
+          git clone https://github.com/bats-core/bats-support tests/libs/bats-support
+      - name: Run Bats tests
+        run: |
+          bats tests/envs.bats
