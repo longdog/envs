@@ -35,3 +35,23 @@ teardown() {
   [ -L .env ]
   [ "$(readlink .env)" = "$expected_target" ]
 }
+
+@test "moves existing .env to centralized location" {
+  echo "FOO=bar" > .env
+  run "$SCRIPT"
+  assert_success
+  assert_output --partial "Preserving existing .env file"
+
+  central_env="$HOME/.config/envs/github.com-example-project.git/back/.env"
+  [ -f "$central_env" ]
+  [ "$(cat "$central_env")" = "FOO=bar" ]
+  [ -L .env ]
+  [ "$(readlink .env)" = "$central_env" ]
+}
+
+@test "does nothing if not inside a git repo" {
+  cd "$TMPDIR"
+  run "$SCRIPT"
+  assert_failure
+  assert_output --partial "Error: Not a git repository"
+}
