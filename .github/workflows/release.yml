@@ -42,3 +42,41 @@ jobs:
             LICENSE
         env:
           GITHUB_TOKEN: ${{ secrets.GH_PUB }}
+  npm:
+    runs-on: ubuntu-latest
+    needs: release
+    if: startsWith(github.ref, 'refs/tags/v')
+
+    steps:
+      - name: Download
+        run: |
+          mkdir -p bin
+          curl -L -o bin/envs https://github.com/longdog/envs/releases/download/${GITHUB_REF##*/}/envs
+          chmod +x bin/envs
+      - name: Generate package.json
+        run: |
+          VERSION="${GITHUB_REF##*/}"
+          VERSION_CLEAN=${VERSION#v}
+          cat > package.json <<EOF
+          {
+            "name": "@longdog/envs",
+            "version": "$VERSION_CLEAN",
+            "description": ".env file manager",
+            "bin": {
+              "envs": "./bin/envs"
+            },
+            "author": "Denis Abrosimov <denis.abrosimov@gmail.com>",
+            "license": "MIT",
+            "keywords": ["dotenv", "env", "cli"]
+          }
+          EOF
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          registry-url: "https://registry.npmjs.org/"
+
+      - name: Publish to npm
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
