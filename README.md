@@ -1,6 +1,8 @@
 # envs - Simple .env Files Manager
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![test](https://github.com/longdog/envs/actions/workflows/test.yml/badge.svg)](https://github.com/longdog/envs/actions/workflows/test.yml)
+[![release](https://github.com/longdog/envs/actions/workflows/release.yml/badge.svg)](https://github.com/longdog/envs/actions/workflows/release.yml)
 
 `envs` is a lightweight bash script that helps developers manage `.env` files across projects.
 
@@ -19,6 +21,7 @@ If you prefer manual installation:
 ```bash
 curl -sSfLo ~/.local/bin/envs https://raw.githubusercontent.com/longdog/envs/main/envs
 ```
+
 2. Make it executable:
 
 ```bash
