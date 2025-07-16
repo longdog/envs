@@ -10,7 +10,7 @@ stdenv.mkDerivation rec {
 
   src = fetchurl {
     url = "https://github.com/longdog/envs/archive/refs/tags/v${version}.tar.gz";
-    sha256 = "sha256-RyPv4eJpSaQ3X+y7jQtVs5KjCDJOzf/YZJwuXvum508=";
+    sha256 = "sha256-gvuw/Jj/uCS9E9Xi90zm/IgBywZUbycAj4TZBPfMJR4=";
   };
 
   installPhase = ''
