@@ -1,16 +1,18 @@
 {
   lib,
   stdenv,
-  fetchurl,
+  fetchFromGitHub,
 }:
 
 stdenv.mkDerivation rec {
   pname = "envs";
   version = "1.1.1";
 
-  src = fetchurl {
-    url = "https://github.com/longdog/envs/archive/refs/tags/v${version}.tar.gz";
-    sha256 = "sha256-RyPv4eJpSaQ3X+y7jQtVs5KjCDJOzf/YZJwuXvum508=";
+  src = fetchFromFitHub {
+    owner = "longdog";
+    repo = "envs";
+    rev = "v${version}";
+    sha256 = "sha256-xxxxxxxxxxxxxxxxxxxx";
   };
 
   installPhase = ''
